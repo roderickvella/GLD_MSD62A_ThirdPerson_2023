@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -22,6 +24,36 @@ public class InventoryManager : MonoBehaviour
         itemsForPlayer = new List<InventoryItem>();
 
         PopulateInventorySpawn();
+        RefreshInventoryGUI();
+    }
+
+    private void RefreshInventoryGUI()
+    {
+        int buttonId = 0;
+        foreach(InventoryItem i in itemsForPlayer)
+        {
+            //load the button
+            GameObject button = itemsSelectionPanel.transform.Find("Button" + buttonId).gameObject;
+
+            //search for the child image and change it's sprite
+            button.transform.Find("Image").GetComponent<Image>().sprite = i.item.icon;
+
+            //change the quantity
+            button.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = "x" + i.quantity;
+
+            //increment the button id by 1 to move to the next button
+            buttonId += 1;
+        }
+
+        //set active false redundant buttons
+       for(int i=buttonId; i<3; i++)
+       {
+            itemsSelectionPanel.transform.Find("Button" + i).gameObject.SetActive(false);
+       }
+
+
+
+
     }
 
     private void PopulateInventorySpawn()
